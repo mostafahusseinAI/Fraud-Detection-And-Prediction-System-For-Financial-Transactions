@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fraud Detection</title>
+ 
+    <style>
+      :root{
+        --bg:#0b1220;
+        --card:rgba(255,255,255,.06);
+        --text:#eaf0ff;
+        --muted:rgba(234,240,255,.72);
+        --line:rgba(255,255,255,.12);
+        --accent:#7c3aed;
+        --accent2:#06b6d4;
+        --shadow:0 20px 70px rgba(0,0,0,.35);
+        --radius:18px;
+      }
+ 
+      *{ box-sizing:border-box; }
+      body{
+        margin:0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+        color:var(--text);
+        background:
+          radial-gradient(1000px 500px at 15% 10%, rgba(124,58,237,.35), transparent 60%),
+          radial-gradient(900px 500px at 85% 20%, rgba(6,182,212,.25), transparent 55%),
+          radial-gradient(700px 500px at 50% 100%, rgba(34,197,94,.10), transparent 55%),
+          var(--bg);
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:36px 18px;
+      }
+ 
+      .wrap{ width:min(980px, 100%); }
+ 
+      .topbar{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        margin-bottom:18px;
+      }
+ 
+      .brand{ display:flex; align-items:center; gap:12px; }
+ 
+      .logo{
+        width:44px; height:44px;
+        border-radius:14px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        box-shadow: var(--shadow);
+      }
+ 
+      h1{ font-size:20px; margin:0; letter-spacing:.2px; }
+ 
+      .subtitle{
+        margin:2px 0 0 0;
+        color:var(--muted);
+        font-size:13px;
+      }
+ 
+      .card{
+        background:linear-gradient(180deg, var(--card), rgba(255,255,255,.03));
+        border:1px solid var(--line);
+        border-radius:var(--radius);
+        box-shadow: var(--shadow);
+        overflow:hidden;
+      }
+ 
+      .card-inner{ padding:22px; }
+ 
+      .grid{
+        display:grid;
+        grid-template-columns: 1.2fr .8fr;
+        gap:18px;
+      }
+ 
+      @media (max-width: 860px){
+        .grid{ grid-template-columns:1fr; }
+      }
+ 
+      .panel{
+        background:rgba(255,255,255,.04);
+        border:1px solid var(--line);
+        border-radius:16px;
+        padding:16px;
+      }
+ 
+      .label{ font-size:13px; color:var(--muted); margin-bottom:8px; }
+ 
+      .filebox{
+        display:flex;
+        gap:10px;
+        align-items:center;
+        flex-wrap:wrap;
+      }
+ 
+      input[type=file]{
+        color:var(--muted);
+        background:rgba(255,255,255,.04);
+        border:1px dashed rgba(255,255,255,.18);
+        padding:10px 12px;
+        border-radius:14px;
+        width:min(520px, 100%);
+      }
+ 
+      .btn{
+        appearance:none;
+        border:1px solid rgba(255,255,255,.16);
+        background:rgba(255,255,255,.06);
+        color:var(--text);
+        padding:10px 14px;
+        border-radius:14px;
+        cursor:pointer;
+        font-weight:600;
+        letter-spacing:.2px;
+        transition: transform .08s ease, background .15s ease, border-color .15s ease;
+        text-decoration:none;
+        display:inline-flex;
+        align-items:center;
+        gap:10px;
+      }
+ 
+      .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.25); }
+      .btn:active{ transform: translateY(0px); }
+ 
+      .btn-primary{
+        border-color: rgba(124,58,237,.55);
+        background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(6,182,212,.85));
+        box-shadow: 0 10px 30px rgba(124,58,237,.25);
+      }
+ 
+      .btn-download{
+        border-color: rgba(34,197,94,.55);
+        background: linear-gradient(135deg, rgba(34,197,94,.95), rgba(6,182,212,.75));
+        box-shadow: 0 10px 30px rgba(34,197,94,.18);
+      }
+ 
+      .chips{ display:flex; gap:10px; flex-wrap:wrap; }
+ 
+      .chip{
+        padding:8px 10px;
+        border-radius:999px;
+        background:rgba(255,255,255,.06);
+        border:1px solid rgba(255,255,255,.14);
+        font-size:12px;
+        color:var(--muted);
+      }
+ 
+      .error{
+        margin-top:12px;
+        padding:12px 12px;
+        border-radius:14px;
+        border:1px solid rgba(239,68,68,.35);
+        background: rgba(239,68,68,.12);
+        color:#ffd4d4;
+        font-weight:600;
+      }
+ 
+      .stats{
+        display:grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap:12px;
+        margin-top:12px;
+      }
+ 
+      @media (max-width: 520px){
+        .stats{ grid-template-columns:1fr; }
+        .charts{ grid-template-columns:1fr !important; }
+      }
+ 
+      .stat{
+        background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+        border:1px solid rgba(255,255,255,.12);
+        border-radius:16px;
+        padding:14px;
+      }
+ 
+      .stat .k{ color:var(--muted); font-size:12px; margin-bottom:6px; }
+      .stat .v{ font-size:22px; font-weight:800; letter-spacing:.2px; }
+      .v.fraud{ color:#ff8b8b; }
+      .v.legit{ color:#8bffb7; }
+ 
+      .charts{
+        margin-top:14px;
+        display:grid;
+        grid-template-columns: 1fr;
+        gap:12px;
+      }
+ 
+      .chart-img{
+        width:100%;
+        max-height: 560px;
+        object-fit:contain; 
+      }
+ 
+      .foot{
+        margin-top:14px;
+        color:rgba(234,240,255,.55);
+        font-size:12px;
+        line-height:1.4;
+      }
+    </style>
+  </head>
+ 
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <h1>Fraud Detection System</h1>
+            <div class="subtitle">Upload a CSV and download predictions</div>
+          </div>
+        </div>
+        <div class="chips">
+          <div class="chip">Local Flask app</div>
+          <div class="chip">Model + scaler</div>
+        </div>
+      </div>
+ 
+      <div class="card">
+        <div class="card-inner grid">
+          <div class="panel">
+            <div class="label"><b>Upload CSV</b></div>
+ 
+            <form action="/predict" method="post" enctype="multipart/form-data">
+              <div class="filebox">
+                <input type="file" name="file" accept=".csv" required />
+                <button class="btn btn-primary" type="submit">Predict</button>
+              </div>
+ 
+              {% if error %}
+                <div class="error">{{ error }}</div>
+              {% endif %}
+            </form>
+ 
+            <div class="foot">
+              Tip: If you see “Model is still loading”, wait a few seconds and retry.
+            </div>
+          </div>
+ 
+          <div class="panel">
+            <div class="label"><b>Results</b></div>
+ 
+            {% if token %}
+              <div class="chip" style="margin-bottom:10px;">
+                <b>File:</b>&nbsp;{{ filename }}
+              </div>
+ 
+              <div class="stats">
+                <div class="stat">
+                  <div class="k">Total rows</div>
+                  <div class="v">{{ total }}</div>
+                </div>
+                <div class="stat">
+                  <div class="k">Fraud</div>
+                  <div class="v fraud">{{ fraud }}</div>
+                </div>
+                <div class="stat">
+                  <div class="k">Legit</div>
+                  <div class="v legit">{{ legit }}</div>
+                </div>
+              </div>
+ 
+              <div style="margin-top:14px;">
+                <a class="btn btn-download" href="/download/{{ token }}">Download results CSV</a>
+              </div>
+ 
+              {% if pie_b64 %}
+                <div class="charts">
+                  <div class="stat" style="padding:12px;">
+                    <div class="k">Fraud vs Legit</div>
+                    <img
+                      class="chart-img"
+                      alt="Pie chart"
+                      src="data:image/png;base64,{{ pie_b64 }}"
+                    />
+                  </div>
+ 
+                  {% if hist_b64 %}
+                  <div class="stat" style="padding:12px;">
+                    <div class="k">Fraud Amount Histogram</div>
+                    <img
+                      class="chart-img"
+                      alt="Histogram"
+                      src="data:image/png;base64,{{ hist_b64 }}"
+                    />
+                  </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+ 
+            {% else %}
+              <div class="chip">No file predicted yet</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
